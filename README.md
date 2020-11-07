@@ -97,4 +97,3 @@ Some useful things for developers to know:
    - Once you are inside the virtual environment for ALITA-client, you can make a new binary by using the command `ALITA-publish`.
    - Start the local ALITA server.
    - When running the ALITA binary, add the flags `--insecure --server localhost:<port>` to point it to the running ALITA-server
-   - To find demo assignments that you can use the binary with, look in [ALITA-client/demo](https://github.com/okpy/ALITA-client/tree/master/demo)
