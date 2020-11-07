@@ -1,12 +1,12 @@
 [![Logo](https://github.com/srichakradhar/ALITA/blob/master/server/static/img/logo.png)](#)
 =====
 
-The ALITA server collects submissions and displays analysis of student progress
-based on logging sent from client scripts.
+ALITA - ArtificiaL Intelligence Teaching Assistant
+Due to the increasing demand of TAs and budget cuts, it is becoming increasingly hard to manage grading and instruction. ALITA helps with content curation, scheduling, grading and question answering.
 
-
-The ALITA software was developed for at UMKC Kansas City.
-
+Demo
+-------------
+https://youtu.be/fwCECsGVD_w
 
 Installation
 -------------
@@ -48,14 +48,6 @@ To be able to run the workers you should have a `redis` server installed and run
 If `redis` is not installed you can install it using your distribution's package
 manager or follow [Redis Quick Start](https://redis.io/topics/quickstart).
 
-Command Line Manager
-------------------------
-* To view available commands run `./manage.py` once the virtualenv is activated.
-
-Customizing seed content
--------------------
-`server/generate.py` initializes the local server with sample content (Users, Assignments, a Course etc). You can customize it by changing the file and running `./manage.py resetdb`.
-
 Server Development
 ------------------
 The server is developed in Python 3.5+ using Flask.
@@ -71,29 +63,3 @@ Composition Grading
 
 Autograding
 - Automatic grading of student submissions
-
-Developer Guidelines
---------------------
-See `documentation/CONTRIBUTING.md`
-
-Recent activity:
-
-Deploying
----------
-Docker + Kubernetes on Google Container Engine. See `kubernetes/kubernetes.md` for more info.
-
-The ALITA-server also supports deployments to Heroku or servers on any major hosting service.
-
-There also exists a [one-click setup](./azure/paas/README.md) for ALITA-server on Azure.
-
-Python Style Guide
--------------------
-Refer to [The Elements of Python Style](https://github.com/amontalenti/elements-of-python-style)
-
-Some useful things for developers to know:
-
-1. Testing with ALITA-client
-   - To test with ALITA-client, please follow the instructions for the ALITA-client repo [here](https://github.com/okpy/ALITA-client).
-   - Once you are inside the virtual environment for ALITA-client, you can make a new binary by using the command `ALITA-publish`.
-   - Start the local ALITA server.
-   - When running the ALITA binary, add the flags `--insecure --server localhost:<port>` to point it to the running ALITA-server
