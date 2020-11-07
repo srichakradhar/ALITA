@@ -1,18 +1,12 @@
-[![Logo](https://raw.githubusercontent.com/okpy/ok/master/server/static/img/logo-tiny.png)](#)
+[![Logo](https://raw.githubusercontent.com/okpy/ok/master/server/static/img/logo.png)](#)
 =====
 
-The ok.py server collects submissions and displays analysis of student progress
+The ALITA server collects submissions and displays analysis of student progress
 based on logging sent from client scripts.
 
-Courses can sign up for our free hosted service on [okpy.org](https://okpy.org)
 
-The ok.py software was developed for CS 61A at UC Berkeley.
+The ALITA software was developed for at UMKC Kansas City.
 
-[![Build Status](https://circleci.com/gh/okpy/ok.svg?style=shield)](https://circleci.com/gh/okpy/ok)
-[![Coverage Status](https://coveralls.io/repos/github/okpy/ok/badge.svg)](https://coveralls.io/github/okpy/ok)
-[![Docker Repository on Quay](https://quay.io/repository/cs61a/ok-server/status "Docker Repository on Quay")](https://quay.io/repository/cs61a/ok-server)
-
-View Documentation at [OK Documentation](https://okpy.github.io/documentation)
 
 Installation
 -------------
@@ -78,26 +72,19 @@ Composition Grading
 Autograding
 - Automatic grading of student submissions
 
-Projects using ok.py
---------------------
-- [CS61A](http://cs61a.org) uses ok.py for all assignments.
-- Many other UC Berkeley CS courses use ok.py
-
 Developer Guidelines
 --------------------
 See `documentation/CONTRIBUTING.md`
 
 Recent activity:
 
-[![Throughput Graph](https://graphs.waffle.io/okpy/ok/throughput.svg)](https://waffle.io/okpy/ok/metrics/throughput)
-
 Deploying
 ---------
 Docker + Kubernetes on Google Container Engine. See `kubernetes/kubernetes.md` for more info.
 
-The ok-server also supports deployments to Heroku or servers on any major hosting service.
+The ALITA-server also supports deployments to Heroku or servers on any major hosting service.
 
-There also exists a [one-click setup](./azure/paas/README.md) for ok-server on Azure.
+There also exists a [one-click setup](./azure/paas/README.md) for ALITA-server on Azure.
 
 Python Style Guide
 -------------------
@@ -105,9 +92,9 @@ Refer to [The Elements of Python Style](https://github.com/amontalenti/elements-
 
 Some useful things for developers to know:
 
-1. Testing with ok-client
-   - To test with ok-client, please follow the instructions for the ok-client repo [here](https://github.com/okpy/ok-client).
-   - Once you are inside the virtual environment for ok-client, you can make a new binary by using the command `ok-publish`.
+1. Testing with ALITA-client
+   - To test with ALITA-client, please follow the instructions for the ALITA-client repo [here](https://github.com/okpy/ALITA-client).
+   - Once you are inside the virtual environment for ALITA-client, you can make a new binary by using the command `ALITA-publish`.
    - Start the local ok server.
-   - When running the ok binary, add the flags `--insecure --server localhost:<port>` to point it to the running ok-server
-   - To find demo assignments that you can use the binary with, look in [ok-client/demo](https://github.com/okpy/ok-client/tree/master/demo)
+   - When running the ok binary, add the flags `--insecure --server localhost:<port>` to point it to the running ALITA-server
+   - To find demo assignments that you can use the binary with, look in [ALITA-client/demo](https://github.com/okpy/ALITA-client/tree/master/demo)
