@@ -1,4 +1,4 @@
-[![Logo](https://github.com/srichakradhar/ALITA/master/server/static/img/logo.png)](#)
+[![Logo](https://github.com/srichakradhar/ALITA/blob/master/server/static/img/logo.png)](#)
 =====
 
 The ALITA server collects submissions and displays analysis of student progress
