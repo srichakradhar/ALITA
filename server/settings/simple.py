@@ -13,7 +13,7 @@ class Config(ProdBaseConfig, BaseConfig):
     RQ_DEFAULT_HOST = REDIS_HOST = CACHE_REDIS_HOST = \
         os.getenv('REDIS_HOST', 'localhost')
 
-    CACHE_KEY_PREFIX = 'ok-web'
+    CACHE_KEY_PREFIX = 'ALITA-web'
 
     STORAGE_CONTAINER = os.getenv('STORAGE_CONTAINER',
                                   os.path.abspath("./local-storage"))

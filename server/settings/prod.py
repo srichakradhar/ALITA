@@ -16,7 +16,7 @@ class Config(ProdBaseConfig, BaseConfig):
     MAX_CONTENT_LENGTH = 30 * 1024 * 1024  # Max Upload Size is 30MB
 
     CACHE_TYPE = 'redis'
-    CACHE_KEY_PREFIX = 'ok-web'
+    CACHE_KEY_PREFIX = 'ALITA-web'
 
     # The Google Cloud load balancer behaves like two proxies:
     # one with the external fowarding rule IP, and

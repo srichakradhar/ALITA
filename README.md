@@ -64,7 +64,7 @@ Core Features
 -------------
 
 Backup Maintenance
-- Best-effort maintenance of student backups that occur when ok is run.
+- Best-effort maintenance of student backups that occur when ALITA is run.
 
 Composition Grading
 - Allow staff to comment on student composition of projects and assign grades.
@@ -95,6 +95,6 @@ Some useful things for developers to know:
 1. Testing with ALITA-client
    - To test with ALITA-client, please follow the instructions for the ALITA-client repo [here](https://github.com/okpy/ALITA-client).
    - Once you are inside the virtual environment for ALITA-client, you can make a new binary by using the command `ALITA-publish`.
-   - Start the local ok server.
-   - When running the ok binary, add the flags `--insecure --server localhost:<port>` to point it to the running ALITA-server
+   - Start the local ALITA server.
+   - When running the ALITA binary, add the flags `--insecure --server localhost:<port>` to point it to the running ALITA-server
    - To find demo assignments that you can use the binary with, look in [ALITA-client/demo](https://github.com/okpy/ALITA-client/tree/master/demo)

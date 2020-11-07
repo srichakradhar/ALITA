@@ -30,12 +30,12 @@
               </a>
             </li>
             {% if current_user.is_admin %}
-              <li><a href="{{ url_for('.client_version', name='ok-client') }}">OK Client Version</a></li>
+              <li><a href="{{ url_for('.client_version', name='ALITA-client') }}">ALITA Client Version</a></li>
             {% endif %}
             <li class="divider"></li>
             <li><a href="{{ url_for('about.documentation' )}}">Documentation</a></li>
             <li class="divider"></li>
-            <li><a href="https://ok-oauth.app.cs61a.org">Access Token</a></li>
+            <li><a href="https://ALITA-oauth.app.cs61a.org">Access Token</a></li>
           </ul>
 {% endset %}
 

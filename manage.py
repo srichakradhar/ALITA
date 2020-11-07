@@ -69,9 +69,9 @@ def setup_default():
     )
     db.session.add(course)
 
-    url = 'https://github.com/okpy/ok-client/releases/download/v1.5.5/ok'
-    ok = Version(name='ok-client', current_version='v1.5.4', download_link=url)
-    db.session.add(ok)
+    url = 'https://github.com/okpy/ALITA-client/releases/download/v1.5.5/ALITA'
+    ALITA = Version(name='ALITA-client', current_version='v1.5.4', download_link=url)
+    db.session.add(ALITA)
     db.session.commit()
 
 @manager.command

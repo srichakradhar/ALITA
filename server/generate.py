@@ -321,9 +321,9 @@ def seed_backups():
 
 def seed_versions():
     print('Seeding version...')
-    url = 'https://github.com/okpy/ok-client0/releases/download/v1.5.5/ok'
-    ok = Version(name='ok-client', current_version='v1.5.5', download_link=url)
-    db.session.add(ok)
+    url = 'https://github.com/okpy/ALITA-client0/releases/download/v1.5.5/ALITA'
+    ALITA = Version(name='ALITA-client', current_version='v1.5.5', download_link=url)
+    db.session.add(ALITA)
 
 
 def seed_comments():

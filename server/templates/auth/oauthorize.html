@@ -1,10 +1,10 @@
 {% extends "auth/base.html" %}
 {% import 'staff/_formhelpers.html' as forms %}
 
-{% block title %}Authorize {{client.name }} | Ok{% endblock %}
+{% block title %}Authorize {{client.name }} | ALITA{% endblock %}
 
 {% block content %}
-<h3>{{client.name}} wants to access your OK account</h3>
+<h3>{{client.name}} wants to access your ALITA account</h3>
 <blockquote>
   <p><strong>You are logged in as {{ current_user.email }}. <br> Not you?
   <a id="reauthenticate-button" data-no-instant href="{{ url_for('.reauthenticate', **dict(request.uri_query_params)) }}">Use a different account</a></strong></p>

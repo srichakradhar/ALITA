@@ -76,7 +76,7 @@ def create_app(environment_name=None):
 
     @app.route("/healthz")
     def health_check():
-        return 'OK'
+        return 'ALITA'
 
     @app.after_request
     def flush_appinsights_telemetry(response):

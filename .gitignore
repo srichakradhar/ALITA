@@ -22,7 +22,7 @@ secret*
 *.egg-info
 dist
 
-# ok-related files
+# ALITA-related files
 *.ok_refresh
 *.ok_messages
 local-storage/*

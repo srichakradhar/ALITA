@@ -1,6 +1,6 @@
 """autograder.py: An interface to the autograder infrastructure (named autopy)
 
-This module interfaces the OK Server with Autopy. The actual autograding happens
+This module interfaces the ALITA Server with Autopy. The actual autograding happens
 in a sandboxed environment.
 """
 import collections
@@ -24,8 +24,8 @@ def send_autograder(endpoint, data, autograder_url):
     r = requests.post(autograder_url + endpoint,
                       data=json.dumps(data), headers=headers, timeout=8)
 
-    if r.status_code == requests.codes.ok:
-        if r.text == "OK":  # e.g. when the token is "test"
+    if r.status_code == requests.codes.ALITA:
+        if r.text == "ALITA":  # e.g. when the token is "test"
             return None
         return r.json()
     else:
@@ -68,12 +68,12 @@ def send_batch(token, assignment, backup_ids, priority='default'):
     if not assignment.autograding_key:
         raise ValueError('Assignment has no autograder key')
 
-    response_json = send_autograder('/api/ok/v3/grade/batch', {
+    response_json = send_autograder('/api/ALITA/v3/grade/batch', {
         'subm_ids': [utils.encode_id(bid) for bid in backup_ids],
         'assignment': assignment.autograding_key,
         'access_token': token.access_token,
         'priority': priority,
-        'ok-server-version': 'v3',
+        'ALITA-server-version': 'v3',
     }, autograder_url=assignment.course.autograder_url)
     if response_json:
         return dict(zip(backup_ids, response_json['jobs']))

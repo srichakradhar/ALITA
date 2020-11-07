@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ALITA</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<style>
+		iframe{
+			border:none;
+		}
+		
+		.col-md-4 {
+			margin-top: 20%;
+		}
+	</style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+       <a class="navbar-brand" href="file:///C:/Users/Sri/Documents/UMKC/Research/Hackathon/ALITA_Student.html">ALITA</a>
+       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+       <span class="navbar-toggler-icon"></span>
+       </button>
+       <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+             <li class="nav-item active">
+                <a class="nav-link" href="file:///C:/Users/Sri/Documents/UMKC/Research/Hackathon/ALITA_Student.html">Q&A <span class="sr-only">(current)</span></a>
+             </li>
+			 <li class="nav-item">
+                <a class="nav-link" href="file:///C:/Users/Sri/Documents/UMKC/Research/Hackathon/results.html">Content Recommendations</a>
+             </li>
+             <li class="nav-item">
+                <a class="nav-link" href="file:///C:/Users/Sri/Documents/UMKC/Research/Hackathon/CS61/hackaroo/cs61a.org/schedule.html">Schedule</a>
+             </li>
+             <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Autograder
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                   <a class="dropdown-item" href="http://localhost:5000/cal/cs61a/sp16/scheme/" target="_blank">Project</a>
+                   <a class="dropdown-item" href="#">Code</a>
+                   <div class="dropdown-divider"></div>
+                   <a class="dropdown-item" href="#">Assignment</a>
+                </div>
+             </li>
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+             <button class="btn btn-outline-success my-2 my-sm-0">Search</button>
+          </form>
+       </div>
+    </nav>
+
+    <div class="container">
+       
+       <div class="row">
+          <div class="col-md-8">
+             <iframe src="file:///C:/Users/Sri/Documents/UMKC/Research/Hackathon/neovis.html" width="100%" height="800px" scrolling="no"></iframe>
+          </div>
+          <div class="col-md-4">
+             <div class="card">
+                <div class="card-body">
+                   <h5 class="card-title">Forum</h5>
+                   <h6 class="card-subtitle mb-2 text-muted">Ask a question</h6>
+                   <form class="form-inline" id="search-form">
+					 <div class ="row">
+					   <input type="text" class="form-control" id="amountQuery" placeholder="Enter the query">
+					</div>
+				  
+					  <button type="submit" class="btn btn-primary" id="qa_btn">Submit</button>
+				  </form>
+				  <p id="answer"><p>
+                   <a href="#" class="card-link">Open Forum</a>
+                   <a href="#" class="card-link">Contact TA</a>
+                </div>
+             </div>
+             <br>
+             <br/>
+             <div class="card">
+                <div class="card-header">
+                   Featured
+                </div>
+                <ul class="list-group list-group-flush">
+                   <li class="list-group-item">Autograder</li>
+                   <li class="list-group-item">Schedule</li>
+                   <li class="list-group-item">Browse Recommendations</li>
+                </ul>
+             </div>
+          </div>
+       </div>
+       
+       <hr>
+       <div class="row">
+          <div class="text-center col-lg-6 offset-lg-3">
+             <h4>ALITA </h4>
+             <p>Copyright &copy; 2020 &middot; All Rights Reserved &middot; <a href="https://www.umkc.edu/" >UMKC</a></p>
+          </div>
+       </div>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) --> 
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	
+    <!-- Include all compiled plugins (below), or include individual files as needed --> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script>
+	$(document).ready(function(){
+	  $("#qa_btn").click(function(e){
+	  e.preventDefault();
+		$("#answer").html("<br><b>Thinking...</b>");
+		setTimeout(function() {
+			$("#answer").text("The attempt to acquire sensitive information such as usernames, passwords, and credit card details directly from users by deceiving the users.");
+		}, 500);
+	  });
+	});
+	</script>
+  </body>
+</html>

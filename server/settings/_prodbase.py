@@ -15,7 +15,7 @@ class Config(object):
 
     CACHE_TYPE = 'simple'
 
-    STORAGE_CONTAINER = os.getenv('STORAGE_CONTAINER', 'ok-v3-user-files')
+    STORAGE_CONTAINER = os.getenv('STORAGE_CONTAINER', 'ALITA-v3-user-files')
 
     RAVEN_IGNORE_EXCEPTIONS = raven_exceptions
 

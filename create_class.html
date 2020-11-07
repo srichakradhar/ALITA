@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ALITA - Create Class</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.3/css/jquery.dataTables.min.css">
+	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+
+
+	<!-- <script src="js/jquery.cookie.js"></script>
+	<script src="js/d3.v3.min.js"></script>
+	<script src="js/utf2ascii.js"></script>
+	<script src="js/ohmage.js"></script> -->
+	<script src="index.js"></script>
+
+	<style>
+
+.btn {
+	min-width: 80px;
+}
+
+	</style>
+
+</head>
+<body>
+
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+       <a class="navbar-brand" href="http://localhost:5000/">ALITA</a>
+    </nav>
+	<!-- Begin page content -->
+	<div class="container">
+
+		<div class="row">
+
+			<div class="page-header">
+				<button id="new_class_button" data-toggle="modal" data-target="#myModal" class="pull-right btn btn-primary"><span class="glyphicon glyphicon-file"></span> Create New Class</button>
+
+				<h1>Class Manager <small id="subtitle"></small></h1>
+			</div>
+
+			<div>
+				<p><i>Select a class, or create a new one, to get started. Visit the <a target="_blank" href="#">wiki help page</a> for more detailed instructions.</i></p>
+
+				<div class="col-md-10 col-md-offset-1" id="errordiv"></div>
+
+				<div id="class-select">
+					<table class="table table-striped table-hover" id="classtable">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>URN</th>
+								<th>Students</th>
+								<th></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td> - </td>
+								<td> - </td>
+								<td> - </td>
+								<td> - </td>
+								<td> - </td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					<h4 class="modal-title" id="myModalLabel">Create New Class</h4>
+				</div>
+				<div class="modal-body">
+					<div id="class-create">
+						<form>
+							<div class="form-group">
+								<label class="control-label" for="inputQuarter">Semester</label>
+								<select class="form-control" id="inputQuarter">
+									<option value="1">Spring 2021</option>
+									<option value="2">Summer 2021</option>
+									<option value="3">Fall 2021</option>
+									<option value="4">Spring 2022</option>
+								</select>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label" for="inputPeriod">Period</label>
+								<select class="form-control" id="inputPeriod">
+									<option value="P1">P1</option>
+									<option value="P2">P2</option>
+									<option value="P3">P3</option>
+									<option value="P4">P4</option>
+									<option value="P5">P5</option>
+									<option value="P6">P6</option>
+									<option value="P7">P7</option>
+									<option value="P8">P8</option>
+								</select>
+							</div>
+
+							<div class="form-group" id="subjectfieldgroup">
+								<label class="control-label" for="inputSubject">Subject</label>
+								<select class="form-control" id="inputSubject">
+									<option value disabled selected> -- select a subject -- </option>
+									<option value="math">Deep Learning</option>
+									<option value="science">Cybersecurity</option>
+									<option value="ecs">Journalism</option>
+									<option value="ids">Data Science</option>
+								</select>
+								<p class="help-block" id="subjectCampaignList"></p>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button id="createbutton" class="btn btn-success"><i class="glyphicon glyphicon-ALITA"></i> Create Class</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

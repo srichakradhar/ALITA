@@ -274,7 +274,7 @@ foreach $file (@ARGV)
 if ("@ARGV" eq '') {
     die "No files submitted.\n $usage";
 }
-print "OK\n";
+print "ALITA\n";
 
 #
 # Now the real processing begins.
@@ -307,7 +307,7 @@ sub upload_file {
     }
     close(F);
 
-    #  OK Customization to avoid long output
+    #  ALITA Customization to avoid long output
     #  Used to be a print here.
     print $sock "file $id $lang $size $file\n";
     open(F,$file);
@@ -315,7 +315,7 @@ sub upload_file {
     print $sock $_;
     }
     close(F);
-    #  OK Customization to avoid long output
+    #  ALITA Customization to avoid long output
     #  Used to be a print here.
 }
 

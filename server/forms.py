@@ -524,13 +524,13 @@ class ExtensionForm(SubmissionTimeForm):
             return False
         user = User.lookup(self.email.data)
         if not user:
-            message = "{} does not have an OK account".format(self.email.data)
+            message = "{} does not have an ALITA account".format(self.email.data)
             self.email.errors.append(message)
             return False
         return check_validate
 
 class StaffAddGroupFrom(BaseForm):
-    description = """Run this command in the terminal under any assignment folder: python3 ok --get-token"""
+    description = """Run this command in the terminal under any assignment folder: python3 ALITA --get-token"""
 
     email = EmailField('Email',
                        validators=[validators.required(), validators.email()])
@@ -583,7 +583,7 @@ class EditClientForm(ClientForm):
             )
     owner = EmailField(
         'Owner Email',
-        description='''Must be a valid email of OK account with 
+        description='''Must be a valid email of ALITA account with 
             staff access in some course. (Current owner will lose access if changed.)''',
         validators=[validators.optional(), validators.email()]
     )
@@ -803,7 +803,7 @@ class CanvasCourseForm(BaseForm):
 class CanvasAssignmentForm(BaseForm):
     external_id = SelectField('bCourses Assignment',
         coerce=int, validators=[validators.required()])
-    assignment_id = SelectField('OK Assignment',
+    assignment_id = SelectField('ALITA Assignment',
         coerce=int, validators=[validators.required()])
     score_kinds = MultiCheckboxField(
         'Scores',

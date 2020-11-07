@@ -2,7 +2,7 @@
     <div class="logo-box">
       <a href="{{ url_for('student.index') }}">
         <div class="software-logo">
-            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Ok Logo" draggable="false">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="ALITA Logo" draggable="false">
         </div>
       </a>
       <p class="logo-name"> {{ current_user.email }}</p>
@@ -11,7 +11,7 @@
     <ul class="staff">
       {% if announcements %}
       {% else %}
-      <li class="top-level"><i class="fa fa-bullhorn"></i><div class="list-item">Welcome to ALITA! <br> <span><a class="dashed" href="http://cs61a.org/articles/using-ok.html">ALITA User Guide</a></span></div></li>
+      <li class="top-level"><i class="fa fa-bullhorn"></i><div class="list-item">Welcome to ALITA! <br> <span><a class="dashed" href="http://cs61a.org/articles/using-ALITA.html">ALITA User Guide</a></span></div></li>
       {% endif %}
     </ul>
   <li class="sidebar-title">Actions</li>

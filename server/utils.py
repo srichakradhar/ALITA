@@ -145,17 +145,17 @@ def random_row(query):
 
 
 def new_course_email(instructor, course):
-    subject = "{} + OK".format(course.display_name)
+    subject = "{} + ALITA".format(course.display_name)
     template = 'email/new_course.html'
     text = ""  # The template already includes the copy
-    link_text = "View OK Documentation"
+    link_text = "View ALITA Documentation"
     link = url_for('about.documentation', _external=True)
-    # use +ok in cc'd emails so that those users are still valid recipients
+    # use +ALITA in cc'd emails so that those users are still valid recipients
     return send_email(
         instructor.email, subject, text,
         reply_to="ericpai@berkeley.edu",
-        from_name="OK Team",
-        cc=('ericpai+ok@berkeley.edu', 'denero+ok@berkeley.edu'),
+        from_name="ALITA Team",
+        cc=('ericpai+ALITA@berkeley.edu', 'denero+ALITA@berkeley.edu'),
         template=template, link_text=link_text, link=link,
         course=course, instructor=instructor)
 
@@ -184,11 +184,11 @@ def _get_sendgrid_api_client():
     raise ValueError('no sendgrid credentials available')
 
 
-def send_email(to, subject, body, cc=(), from_name='Ok',
+def send_email(to, subject, body, cc=(), from_name='ALITA',
                link=None, link_text="Sign in",
                template='email/notification.html', reply_to=None, **kwargs):
     """ Send an email using sendgrid.
-    Usage: send_email('student@okpy.org', 'Hey from OK', 'hi',
+    Usage: send_email('student@okpy.org', 'Hey from ALITA', 'hi',
                       cc=['test@example.com'], reply_to='ta@cs61a.org')
     """
     try:

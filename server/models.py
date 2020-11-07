@@ -1364,7 +1364,7 @@ class GroupAction(Model):
 
 class Version(Model):
     id = db.Column(db.Integer(), primary_key=True)
-    # software name e.g. 'ok'
+    # software name e.g. 'ALITA'
     name = db.Column(db.String(255), nullable=False, unique=True, index=True)
     current_version = db.Column(db.String(255))
     download_link = db.Column(db.Text())
