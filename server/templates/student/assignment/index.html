@@ -1,0 +1,153 @@
+{% extends "student/base.html" %}
+{% import 'student/assignment/_tablehelper.html' as table with context %}
+{% import 'student/assignment/_formhelpers.html' as forms %}
+{% import '_globalhelpers.html' as globals %}
+
+{% block title %} Assignment | ALITA {% endblock %}
+
+{% block body %}
+    <main>
+      {% include 'student/assignment/sidebar.html' %}
+      <div class="col-md-2"></div>
+      <section class="content nomapa col-md-10 col-xs-12">
+        {% include 'student/header.html' %}
+
+        <div class="subcontent heading">
+          <div class="wrap">
+            <div class="string-nav" role="navigation" aria-label="page navigation">
+              <span><a href="{{ url_for('.index') }}">Courses</a></span> &raquo;
+              <span><a href="{{ url_for('.course', offering=course.offering) }}"> {{ course.display_name_with_semester }}</a></span> &raquo;
+              <span>{{ assignment.display_name }}</span>
+            </div>
+            <h1>{{ assignment.display_name}} <small class="assignment-due-date"> Due: {{  utils.local_time(assignment.due_date, course) }} </small></h1>
+          </div>
+          {% include 'alerts.html' %}
+
+        </div>
+
+
+        <div class="subcontent list row">
+
+          <div class="col-lg-6 col-md-12 table-responsive group-table">
+            <h2> Group </h2>
+
+            {% include 'student/assignment/group_table.html' %}
+          </div>
+          <div class="col-lg-3 col-md-6 col-xs-12">
+            <h2> Submission </h2>
+            {% if final_submission %}
+              <div class="cell col-xs-12">
+                <div class="cell-title">
+                  <a href="{{ url_for('.code', name=assignment.name, bid=final_submission.id, submit=final_submission.submit)}}" class="due-text green" data-no-instant>
+                    {{ utils.local_time(final_submission.created, course) }}
+                  </a>
+                </div>
+                <div class="cell-text">
+                  <span>Submitted by {{ final_submission.submitter.email }}</span>
+                </div>
+                <div class="cell-status">
+                  <div class="pull-left">
+                        <a href="{{ url_for('.code', name=assignment.name, bid=final_submission.id, submit=final_submission.submit)}}" class="dashed" data-no-instant>
+                          View Code
+                        </a>
+                        <br>
+                        {% if revision %}
+                          <a href="{{ url_for('.code', name=assignment.name, bid=revision.id, submit=revision.submit)}}" class="dashed" data-no-instant>
+                            View Composition Revision
+                          </a>
+                        {% endif %}
+                  </div>
+                  <div class="pull-right">
+                    {% if final_submission.flagged and assignment.active%}
+                      {% call forms.render_form(csrf_form, action_url=url_for('.flag', name=assignment.name, bid=final_submission.id), class_='form-inline') %}
+                        {% if not final_submission.flagged %}
+                          <input type="hidden" name="flag">
+                        {% endif %}
+                        <input type="hidden" name="next" value="{{ request.url }}">
+                        <button class="final-button" type="submit">
+                            <a class="dashed">{{ 'Remove Flag' if final_submission.flagged else 'Flag for Grading' }} </a>
+                        </button>
+                      {% endcall %}
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <div class="cell col-xs-12">
+                <div class="cell-title">
+                  <a class="due-text red"> No Submission </a>
+                </div>
+                <div class="cell-text">
+                  <span> {{ current_user.email }} does not have any submissions for {{ assignment.display_name }} </span>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+          <div class="col-lg-3 col-md-6 col-xs-12">
+            <h2> Scores </h2>
+            <div class="cell col-xs-12 hide-oveflow">
+              {% if scores %}
+                    <div class="cell-text">
+                      {% for score in scores %}
+                        <h4>
+                          <a class="label label-primary" href="{{ url_for('.code', name=assignment.name, submit=score.backup.submit, bid=score.backup_id) }}">
+                            <i class="fa fa-tag"> </i> &nbsp;
+                            {{ score.kind.title() }}: {{ score.score | round(2) }} ({{ globals.backup_style(utils.encode_id(score.backup_id)) }})
+                            </a>
+                        </h4>
+                      {% endfor %}
+                    </div>
+              {% else %}
+                <div class="cell-title">
+                  <a class="due-text red"> No Scores </a>
+                </div>
+                <div class="cell-text">
+                  <span> No scores are currently available. </span>
+                </div>
+              {% endif %}
+
+            </div>
+          </div>
+
+
+      </div>
+      {% if assignment.uploads_enabled %}
+        <div class="subcontent row">
+          <div class="col-xs-12">
+            {% if assignment.active or has_extension %}
+            <a id="new-submission" data-no-instant href="{{url_for('.submit_assignment', name=assignment.name)}}" class="button-large"><i class="fa fa-inbox grey"></i>
+              Create a new submission
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+        <!-- start desktop/tablet version -->
+        <div class="subcontent row hidden-xs hidden-sm">
+          <div class="col-md-12">
+           <!-- TODO: Better link to view all backups -->
+            {{ table.render_subms(subms, course, flagged, csrf_form, tname="Recent Submissions") }}
+            {% if subms %}
+            <a href="{{ url_for('.list_backups', name=assignment.name, submit=True) }}" class="no-dash button-large">
+                View More Submissions
+              </a>
+            {% endif %}
+          </div>
+          <div class="col-md-12">
+            {{  table.render_backups(backups, course, flagged, csrf_form, tname="Recent Backups") }}
+            {% if backups %}
+            <a href="{{ url_for('.list_backups', name=assignment.name, submit=False) }}" class="no-dash button-large">
+                View More Backups
+              </a>
+            {% endif %}
+
+          </div>
+        </div>
+        <!-- start mobile version -->
+        {{ table.render_subms_mobile(subms, course, flagged, csrf_form, tname="Recent Submissions") }}
+        {{ table.render_backups_mobile(backups, course, flagged, csrf_form, tname="Recent Backups")  }}
+        <!-- end mobile version -->
+      </section>
+    </main>
+{% endblock %}

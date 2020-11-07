@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block css %}
+  {{ css_asset("student_css") }}
+
+  {% block page_css %}
+  {% endblock %}
+
+{% endblock %}
+
+{% block js %}
+  {{ js_asset("student_js") }}
+
+  {% if debug %}
+    {{ js_asset("debug_js") }}
+  {% endif %}
+
+  {% if instantclick %}
+    <script data-no-instant>InstantClick.init(50);</script>
+  {% endif %}
+
+  {% block page_js %}
+  {% endblock %}
+
+{% endblock %}

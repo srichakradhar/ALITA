@@ -1,0 +1,46 @@
+{% extends "auth/base.html" %}
+{% import 'staff/_formhelpers.html' as forms %}
+
+{% block title %}Authorize {{client.name }} | Ok{% endblock %}
+
+{% block content %}
+<h3>{{client.name}} wants to access your OK account</h3>
+<blockquote>
+  <p><strong>You are logged in as {{ current_user.email }}. <br> Not you?
+  <a id="reauthenticate-button" data-no-instant href="{{ url_for('.reauthenticate', **dict(request.uri_query_params)) }}">Use a different account</a></strong></p>
+</blockquote>
+
+<p>{{client.name}} would like to: </p>
+<ul class="list-group">
+  {% if 'all' in scopes %}
+    <li class="list-group-item"> View all information for {{ current_user.email }} </li>
+    <li class="list-group-item"> Create backups &amp; submissions on your behalf </li>
+    {% if is_staff %}
+      <li class="list-group-item"> View your students' data. </li>
+    {% endif %}
+  {% elif 'email' in scopes %}
+    <li class="list-group-item"> View your email address ({{ current_user.email }}) </li>
+    <li class="list-group-item"> View your enrollment status </li>
+  {% endif %}
+</ul>
+
+<form class="form-horizontal" action="{{ url_for('oauth.authorize') }}" method="POST">
+{% call forms.render_form_bare(CSRFForm(), action_url=url_for('oauth.authorize'), class_='form-horizontal') %}
+  <div class="form-group">
+    <input type="hidden" name="client_id" value="{{ client.client_id }}">
+    <input type="hidden" name="scope" value="{{ scopes|join(' ') }}">
+    <input type="hidden" name="response_type" value="{{ response_type }}">
+    <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}">
+    {% if state %}
+    <input type="hidden" name="state" value="{{ state }}">
+    {% endif %}
+    <div class="col-xs-6">
+      <button id="confirm-button" name="confirm" class="btn-lg btn-success btn-block btn" value="yes">Confirm</button>
+    </div>
+    <div class="col-xs-6">
+      <button id="cancel-button" name="confirm" class="btn-lg btn-warning btn-block btn" value="no">Cancel</button>
+    </div>
+  </div>
+{% endcall %}
+</form>
+{% endblock content %}

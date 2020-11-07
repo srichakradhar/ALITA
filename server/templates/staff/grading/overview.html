@@ -1,0 +1,164 @@
+{% extends "staff/base.html" %}
+{% import 'staff/_formhelpers.html' as forms %}
+{% import 'staff/_helpers.html' as helpers %}
+
+{% block title %} Grading Queue - {{ current_course.display_name_with_semester }}{% endblock %}
+
+{% block main %}
+  <section class="content-header">
+      {% if assignment %}
+        <h1>
+          {{ assignment.display_name }} Grading Queue
+        </h1>
+      {% else %}
+        <h1>
+          Grading Queues
+        </h1>
+      {% endif %}
+      <ol class="breadcrumb">
+        {% if assignment %}
+          <li><a href="{{ url_for(".course", cid=current_course.id) }}">
+              <i class="fa fa-university"></i> {{ current_course.offering }}
+          </a></li>
+          <li><a href="{{ url_for('.course_assignments', cid=current_course.id) }}">
+            <i class="fa fa-list"></i> Assignments</a>
+          </li>
+          <li class="active"><a href="{{ url_for('.assignment', cid=current_course.id, aid=assignment.id) }}">
+            <i class="fa fa-book"></i> {{ assignment.display_name }}</a>
+          </li>
+          <li class="active"><a href="{{ url_for('.assignment_queues', cid=current_course.id, aid=assignment.id) }}">
+              <i class="fa fa-inbox"></i> Grading Queue</a>
+          </li>
+
+        {% else %}
+          <li><a href="{{ url_for(".grading_tasks") }}"><i class="fa fa-inbox"></i>  Grading Queue </a></li>
+        {% endif %}
+      </ol>
+  </section>
+
+  <section class="content">
+
+    {% include 'alerts.html' %}
+
+    <!-- Default box -->
+    <div class="row">
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="fa fa-inbox"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Total Queues</span>
+              <span class="info-box-number">{{ queues | length }}</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-green"><i class="fa  fa-users"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Remaining queues</span>
+              <span class="info-box-number"> {{ remaining }}</span>
+              <div class="progress">
+                 <div class="progress-bar bg-green" style="width: {{ percent_left }}%"></div>
+              </div>
+               <span class="progress-description">
+                   {% if remaining == 0 %}
+                    Everyone finished!
+                   {% elif percent_left > 50 %}
+                    {{ percent_left | round(2) }}% complete
+                   {% else %}
+                    {{ remaining }} staff members with incomplete queues
+                   {% endif %}
+              </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+  </div>
+
+  {% if incomplete %}
+  <!-- Content Box -->
+  <div class="box collapsed-box">
+      <div class="box-header">
+          <h3 class="box-title">
+              <span>Incomplete Queues</span>
+          </h3>
+
+          <div class="box-tools pull-right">
+              <a href="{{ mailto }}" class="btn btn-sm btn-flat btn-primary email-reminder">
+                Send Email Reminder
+              </a>
+              <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                  </button>
+        </div>
+      </div>
+      <div class="box-body">
+          <p> Users without finished queues:  </p>
+          <p>
+          {% for email in incomplete %}
+            {{ email }}{% if not loop.last %},{% endif %}
+          {% endfor %}
+          </p>
+      </div>
+
+  </div>
+  {% endif %}
+
+<!-- Content Box -->
+<div class="box">
+    <div class="box-header">
+        <h3 class="box-title"><span>Queue</span></h3>
+    </div>
+
+    <!-- /.box-header -->
+    <div class="box-body table-responsive no-padding">
+        <table class="table table-hover">
+            <tbody>
+                <tr>
+                    <th>Assignment</th>
+                    <th>Assignee</th>
+                    <th>Status</th>
+                    <th>Tasks Completed</th>
+                    <th>Total Tasks</th>
+                    <th>Action</th>
+                </tr>
+                {%- for queue in queues %}
+                <tr>
+                    <td> {{ assignment.name }} </td>
+                    <td title="{{ queue.grader.name }}">  {{ queue.grader.email }} </td>
+                    {% if queue.completed == queue.total %}
+                        <td> <span class="label label-success"> Complete </span>
+                    {% else %}
+                        <td> <span class="label label-warning"> Incomplete </span> </td>
+                    {% endif %}
+                    <td> {{ queue.completed }}</td>
+                    <td> {{ queue.total }}</td>
+                    <td>
+                    <a href="{{ url_for('.assignment_single_queue', cid=current_course.id, aid=assignment.id, uid=queue.grader.id)  }}" class="btn btn-block btn-primary btn-flat">
+                        Inspect Queue
+                    </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody></table>
+        </div>
+
+        <!-- /.box-body -->
+        <div class="box-footer">
+            <div class="pull-left">
+                <h5 class="box-title"><span> Total: {{ queues | length }} </span></h5>
+            </div>
+        </div>
+    </div>
+    <!-- /.box -->
+  <!-- </section> do not close the content section -->
+
+  <!-- </body> do not close body in template-->
+{% endblock %}

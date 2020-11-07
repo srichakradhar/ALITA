@@ -1,0 +1,58 @@
+{% extends "staff/base.html" %}
+{% import 'staff/_formhelpers.html' as forms with context %}
+{% import 'staff/_helpers.html' as helpers %}
+{% import 'diff.html' as diff with context %}
+
+{% block title %} {{ assignment.display_name }} Timeline {% endblock %}
+
+{% block main %}
+  <section class="content-header">
+      <h1>
+        {{ student.identifier }}'s {{ assignment.display_name }} Timeline
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{{ url_for("admin.course", cid=current_course.id) }}">
+            <i class="fa fa-university"></i> {{ current_course.offering }}
+        </a></li>
+        <li><a href="{{ url_for('.enrollment', cid=current_course.id) }}">
+          <i class="fa fa-list"></i> Enrollment</a>
+        </li>
+        <li> <a href="{{ url_for('.student_view', cid=current_course.id, email=student.email) }}"><i class="fa fa-user"></i> {{ student.identifier }} </a></li>
+        <li> <a href="{{ url_for('.assignment', cid=current_course.id, aid=assignment.id) }}"><i class="fa fa-book"></i> {{ assignment.display_name }} </a></li>
+        <li class="active"><a href="#"><i class="fa fa-inbox"></i> Timeline </a></li>
+      </ol>
+  </section>
+
+  <section class="content">
+    {% include 'alerts.html' %}
+      <div class="row">
+          {% for submitter in submitters | sort %}
+          <div class="col-md-5">
+            <!-- Default box -->
+                  <ul class="timeline">
+                      <!-- timeline time label -->
+                      <li class="time-label">
+                          <a href="{{ url_for('.student_view', cid=current_course.id, email=student.email) }}">
+                              <span class="bg-red">
+                                  {{ submitter }} ( {{ submitters[submitter] }} backups)
+                              </span>
+                          </a>
+                      </li>
+                      {% if not timeline %}
+                        <li>
+                          <div class="timeline-item">
+                              <div class="timeline-body">
+                                 <p> It doesn't look like there are any analytics messages in the backups to generate a timeline. To learn more about analytics, consult the Ok Client Documentation.</p>
+                              </div>
+                          </div>
+                        </li>
+                      {% endif %}
+
+                      {{ diff.render_timeline(timeline, submitter) }}
+                  </ul>
+          </div>
+          {% endfor %}
+        </div>
+</section>
+  <!-- </body> do not close body in template-->
+{% endblock %}

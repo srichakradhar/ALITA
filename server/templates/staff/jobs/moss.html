@@ -1,0 +1,69 @@
+{% extends "staff/base.html" %}
+{% import "staff/_formhelpers.html" as forms %}
+
+{% block title %} MOSS -  {{ current_course.display_name_with_semester }} {% endblock %}
+
+{% block main %}
+<section class="content-header">
+    <h1>
+        {{ current_course.display_name_with_semester }} Jobs
+        <small>{{ current_course.offering }}</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for(".course", cid=current_course.id) }}">
+            <i class="fa fa-university"></i> {{ current_course.offering }}
+        </a></li>
+        <li><a href="{{ url_for('.course_assignments', cid=current_course.id) }}">
+          <i class="fa fa-list"></i> Assignments</a>
+        </li>
+        <li> <a href="{{ url_for('.assignment', cid=current_course.id, aid=assignment.id) }}"><i class="fa fa-book"></i> {{ assignment.display_name }} </a></li>
+        <li><a href="{{ url_for(".course_jobs", cid=current_course.id) }}">
+            <i class="fa fa-list"></i>Jobs
+        </a></li>
+        <li class="active"><a href="{{ url_for('.start_moss_job', cid=current_course.id, aid=assignment.id) }}">
+            <i class="fa fa-file-text"></i>Start Moss Job</a>
+        </li>
+    </ol>
+</section>
+<section class="content">
+  {% include 'alerts.html' %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title">Submit a Moss Request</h3>
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="box-body">
+          {% call forms.render_form(form, action_text='Start Moss Upload') %}
+            {{ forms.render_field(form.moss_userid) }}
+            {{ forms.render_field(form.file_regex, default=".*") }}
+            {{ forms.render_field(form.language) }}
+            {{ forms.render_field(form.review_threshold) }}
+            {{ forms.render_field(form.num_results) }}
+            {% endcall %}
+        </div>
+      </div>
+
+      <div class="box collapsed-box">
+        <div class="box-header with-border">
+          <h3 class="box-title">Getting a Moss user id</h3>
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="box-body">
+          <ol>
+            <li>Go to <a href="http://theory.stanford.edu/~aiken/moss/">moss.stanford.edu</a> and follow the instructions to register an account.</li>
+            <li>Search for `userid` in the email.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

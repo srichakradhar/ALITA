@@ -1,0 +1,157 @@
+import os
+
+from flask import Flask, render_template, g, request
+from flask_rq import RQ
+from webassets.loaders import PythonLoader as PythonAssetsLoader
+from werkzeug.contrib.fixers import ProxyFix
+
+from server import assets, converters, logging, utils
+from server.forms import CSRFForm
+from server.models import db
+from server.controllers.about import about
+from server.controllers.admin import admin
+from server.controllers.api import endpoints as api_endpoints
+from server.controllers.api import api  # Flask Restful API
+from server.controllers.auth import auth, login_manager
+from server.controllers.oauth import oauth
+from server.controllers.student import student
+from server.controllers.queue import queue
+from server.controllers.files import files
+from server.constants import API_PREFIX
+
+from server.extensions import (
+    appinsights,
+    assets_env,
+    cache,
+    csrf,
+    debug_toolbar,
+    sentry,
+    storage
+)
+
+def create_app(environment_name=None):
+    """Create and return a Flask application. Reads a config file path from the
+    OK_SERVER_CONFIG environment variable. If it is not set, it imports and reads 
+    from the config module (using environment_name). This is so we can default to a development
+    environment locally, but the app will fail in production if there is no
+    config file rather than dangerously defaulting to a development environment.
+    """
+
+    app = Flask(__name__)
+
+    env_module_path = os.getenv('OK_SERVER_CONFIG',
+                                'server.settings.{}'.format(environment_name))
+
+    if '/' in env_module_path:
+        env_module_path = env_module_path.replace('/', '.')
+        env_module_path = env_module_path.replace('.py', '')
+
+    app.config.from_object(env_module_path  + '.Config')
+
+    # Set REMOTE_ADDR for proxies
+    num_proxies = app.config.get('NUM_PROXIES', 0)
+    if num_proxies:
+        app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=num_proxies)
+
+    # Sentry Error Reporting
+    sentry_dsn = os.getenv('SENTRY_DSN')
+    if not app.debug and sentry_dsn:
+        sentry.init_app(app, dsn=sentry_dsn)
+
+        @app.errorhandler(500)
+        def internal_server_error(error):
+            return render_template('errors/500.html',
+                event_id=g.sentry_event_id,
+                public_dsn=sentry.client.get_public_dsn('https')
+            ), 500
+
+    # Azure Application Insights request and error tracking
+    appinsights.init_app(app)
+
+    @app.errorhandler(404)
+    def not_found_error(error):
+        if request.path.startswith("/api"):
+            return api.handle_error(error)
+        return render_template('errors/404.html'), 404
+
+    @app.route("/healthz")
+    def health_check():
+        return 'OK'
+
+    @app.after_request
+    def flush_appinsights_telemetry(response):
+        appinsights.flush()
+        return response
+
+    @app.context_processor
+    def inject_root_url():
+        return {'index_url': app.config['APPLICATION_ROOT']}
+
+    # initialize the cache
+    cache.init_app(app)
+
+    # initialize redis task queues
+    RQ(app)
+
+    # Protect All Routes from csrf
+    csrf.init_app(app)
+
+    # initialize the debug tool bar
+    debug_toolbar.init_app(app)
+
+    # initialize SQLAlchemy
+    db.init_app(app)
+
+    # Flask-Login manager
+    login_manager.init_app(app)
+
+    # initalize cloud storage
+    storage.init_app(app)
+    # Set up logging
+    logging.init_app(app)
+
+    # Import and register the different asset bundles
+    assets_env.init_app(app)
+    assets_loader = PythonAssetsLoader(assets)
+    for name, bundle in assets_loader.load_bundles().items():
+        assets_env.register(name, bundle)
+
+    # custom URL handling
+    converters.init_app(app)
+
+    # custom Jinja rendering
+    app.jinja_env.globals.update({
+        'utils': utils,
+        'debug': app.debug,
+        'instantclick': app.config.get('INSTANTCLICK', True),
+        'CSRFForm': CSRFForm
+    })
+
+    app.jinja_env.filters.update({
+        'markdown': utils.convert_markdown,
+        'pluralize': utils.pluralize,
+    })
+
+    # register our blueprints
+    # OAuth should not need CSRF protection
+    csrf.exempt(auth)
+    app.register_blueprint(auth)
+
+    csrf.exempt(oauth)
+    app.register_blueprint(oauth)
+    app.register_blueprint(files)
+
+    app.register_blueprint(student)
+
+    app.register_blueprint(admin, url_prefix='/admin')
+    app.register_blueprint(about, url_prefix='/about')
+
+    # Redis Queue dashboard
+    csrf.exempt(queue)
+    app.register_blueprint(queue, url_prefix='/rq')
+
+    # API does not need CSRF protection
+    csrf.exempt(api_endpoints)
+    app.register_blueprint(api_endpoints, url_prefix=API_PREFIX)
+
+    return app

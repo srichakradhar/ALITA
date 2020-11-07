@@ -1,0 +1,251 @@
+{# Renders a line number. If i is None then no number is displayed. #}
+{% macro line_number(i) %}
+  <td class="line-number" data-line-number="{{ '' if i is none else i }}"></td>
+{% endmacro %}
+
+{% macro render_comment(comment) %}
+  <div class="comment"
+    id="{{ utils.encode_id(comment.id) }}"
+    data-id="{{ utils.encode_id(comment.id) }}"
+    data-message="{{ comment.message }}"
+    data-no-instant>
+    <div class="comment-header clearfix">
+      <div class="comment-author">
+        {{ comment.author.email }} commented {{ utils.natural_time(comment.created) }}
+      </div>
+      {% if comment.author == current_user or current_user.is_admin %}
+      <div class="comment-actions">
+        <button class="btn btn-link comment-action comment-edit"><i class="fa fa-pencil"></i></button>
+        <button class="btn btn-link comment-action comment-delete"><i class="fa fa-times"></i></button>
+      </div>
+      {% endif %}
+    </div>
+    <div class="comment-body markdown-body">{{ comment.message | markdown }}</div>
+  </div>
+{% endmacro %}
+
+{% macro editor_template() %}
+  <div class="comment comment-editor clearfix">
+    <div class="comment-write">
+      <textarea placeholder="Leave a comment" rows="8"></textarea>
+    </div>
+    <div class="comment-preview">
+      <div class="comment-body markdown-body"></div>
+    </div>
+    <div class="comment-editor-actions">
+      <button class="btn btn-default comment-cancel">Cancel</button>
+      <button class="btn btn-primary comment-save">Save</button>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro render_files(backup, files, moss_diff=False) %}
+    {% for filename, file in files | dictsort %}
+        {% if file.id %}
+              {{ external_file(backup, filename, file) }}
+        {% else %}
+              {{ source_file(backup, filename, file, moss_diff) }}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro render_source(file, backup=None) %}
+    {% for line in file.lines %}
+      <tr class="fixed-width-font highlight-{{ line.tag }}" data-line={{ line.line_after }}>
+        {% if line.is_diff %}
+          {{ line_number(line.line_before) }}
+        {% endif %}
+        {{ line_number(line.line_after) }}
+        <td>
+          {% if line.line_after %}
+            <span class="comment-add"><i class="fa fa-plus"></i></span>
+          {% endif %}
+          <span class="highlight-source">{{ line.contents | safe }}</span>
+        </td>
+      </tr>
+      {% if line.comments %}
+        <tr data-line={{ line.line_after }}>
+          <td class="comment-container" colspan=3>
+            {% for comment in line.comments %}
+              {{ render_comment(comment) }}
+            {% endfor %}
+          </td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro render_notebook(file, backup=None) %}
+<tr>
+    <td>
+        <div class="notebook-pad" id="{{ file.name }}-notebook" data-filename="{{ file.name }}"
+             data-url="{{ url_for('student.download', name=backup.assignment.name, submit=backup.submit, bid=backup.id, file=filename, raw=1) }}">
+        </div>
+    </td>
+</tr>
+{% endmacro %}
+
+{% macro external_file(backup, filename, file) %}
+<div class="box source-file">
+    <div class="box-header source-file-header">
+      <div class="source-file-name fixed-width-font">
+        {{ filename }}
+      </div>
+      <div class="box-tools pull-right">
+          <div class="source-btn btn btn-box-tool">
+            <a data-no-instant href="{{ url_for('student.download', name=backup.assignment.name, submit=backup.submit, bid=backup.id, file=filename, raw=1) }}"
+            class="no-dash dl-button source-file-download">
+                <i class="fa fa-eye"></i> Raw
+            </a>
+          </div>
+          <div class="source-btn btn btn-box-tool">
+            <a data-no-instant href="{{ url_for('student.download', name=backup.assignment.name, submit=backup.submit, bid=backup.id, file=filename) }}"
+                class="no-dash dl-button source-file-download">
+                <i class="fa fa-download"></i> Download
+            </a>
+          </div>
+          <button id="expand-submission-information" type="button" class="btn btn-box-tool" data-widget="collapse">
+              <i class="fa fa-minus"></i>
+          </button>
+      </div>
+    </div>
+    <div class="box-body table-responsive"
+      data-backup-id={{ utils.encode_id(backup.id) }}
+      data-filename={{ filename }}>
+      <table class="highlight">
+        <tbody>
+          {% if file.mimetype.startswith('image') %}
+          <tr>
+              <td>
+                  <img class="source-inline-image" style="display: block; margin: 0 auto;" src="{{ url_for('files.file_url', file_id=file.id) }}">
+              </td>
+          </tr>
+          {% else %}
+          <tr>
+            <th class="file-blob" colspan=3>
+                <a data-no-instant href="{{ url_for('files.file_url', file_id=file.id) }}">
+                  Download File
+                </a>
+                <h6>This file could not be displayed</h6>
+            </th>
+          </tr>
+          {% endif %}
+      </tbody>
+    </table>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro source_file(backup, filename, file, moss_diff) %}
+  <div class="box source-file-box">
+    <div class="box-header source-file-header">
+      <div class="source-file-name fixed-width-font">
+        {{ filename }}
+      </div>
+      <div class="box-tools pull-right">
+          <button type="button" class="source-btn btn btn-box-tool">
+            <a data-no-instant href="{{ url_for('student.download', name=backup.assignment.name, submit=backup.submit, bid=backup.id, file=filename, raw=1) }}"
+            class="no-dash dl-button source-file-download">
+                <i class="fa fa-eye"></i> Raw
+            </a>
+          </button>
+          <button type="button" class="source-btn btn btn-box-tool">
+            <a data-no-instant href="{{ url_for('student.download', name=backup.assignment.name, submit=backup.submit, bid=backup.id, file=filename) }}"
+                class="no-dash dl-button source-file-download">
+                <i class="fa fa-download"></i> Download
+            </a>
+          </button>
+          <button id="expand-submission-information" type="button" class="btn btn-box-tool" data-widget="collapse">
+              <i class="fa fa-minus"></i>
+          </button>
+      </div>
+    </div>
+    <div class="box-body source-file table-responsive"
+      data-backup-id={{ utils.encode_id(backup.id) }}
+      data-filename={{ filename }}>
+      <table class="highlight">
+          {% if file.too_big %}
+          <tr>
+            <th class="file-blob" colspan=3>
+                <a data-no-instant href="{{ url_for('student.download', name=backup.assignment.name, submit=backup.submit, bid=backup.id, file=filename, raw=1) }}">
+                  View Raw File
+                </a>
+                <h6>This file is too large to display</h6>
+            </th>
+          </tr>
+          {% endif %}
+        </thead>
+        <tbody>
+          {% if file.extension == ".ipynb" and not moss_diff %}
+            {{ render_notebook(file, backup) }}
+          {% else %}
+            {{ render_source(file, backup) }}
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro render_timeline(timeline, submitter) %}
+  {% if not timeline %}
+    <li>
+      <div class="timeline-item">
+          <div class="timeline-body">
+             <p> It doesn't look like there are any analytics messages in the backups to generate a timeline. To learn more about analytics, consult the Ok Client Documentation.</p>
+          </div>
+      </div>
+    </li>
+  {% endif %}
+
+  <!-- /.timeline-label -->
+  {% for event in timeline %}
+  <!-- timeline item -->
+  <li class="{% if event['backup'].submitter.email != submitter %}invisible{% endif %}" >
+      {% if event['event'] == "Later" %}
+        <i class="fa fa-ellipsis-h"></i>
+      {% elif event['event'] == "Started" %}
+        <i class="fa fa-hourglass-start bg-blue"></i>
+      {% elif event['event'] == "Solved" %}
+        <i class="fa fa-check-circle bg-green"></i>
+      {% elif event['event'] == "Submitted" %}
+        <i class="fa fa-flag-checkered bg-yellow"></i>
+      {% elif event['event'] == "Switched" %}
+        <i class="fa fa-random bg-green"></i>
+      {% elif event['event'] == "Unlock" %}
+        <i class="fa fa-unlock bg-green"></i>
+      {% elif event['event'] == "Current" %}
+        <i class="fa fa-arrow-right bg-aqua"></i>
+      {% else %}
+        <i class="fa fa-info bg-blue"></i>
+      {% endif %}
+      <!-- timeline icon -->
+      {% if event['event'] == "Later" %}
+      <div class="timeline-later">
+          <p>{{ event['title'] }}</p>
+      </div>
+      {% else %}
+      <div class="timeline-item ">
+          <span class="time"><i class="fa fa-clock-o"></i> {{utils.local_time(event['backup'].created, current_course) }}</span>
+          <h3 class="timeline-header"><a href="#"> {{ event['title'] }} </a> </h3>
+
+          {% if event['body'] %}
+          <div class="timeline-body">
+             <p>{{ event['body'] }}</p>
+          </div>
+          {% endif %}
+          <div class="timeline-footer">
+              <a class="btn btn-primary btn-xs" href="{{ url_for('.grading', bid=event['backup'].id) }}"> Code </a>
+              <a class="btn btn-primary btn-xs" href="{{ url_for('.student_backups_overview', cid=current_course.id, email=event['backup'].submitter.email, aid=assignment.id, backup_id=event['backup'].id)}}"> Diff View </a>
+              <span class="pull-right"> Attempt {{ event['attempt'] }} </span>
+          </div>
+      </div>
+      {% endif %}
+  </li>
+  <!-- END timeline item -->
+  {% endfor %}
+  <li>
+      <i class="fa fa-clock-o bg-gray"></i>
+  </li>
+
+{% endmacro %}

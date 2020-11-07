@@ -1,0 +1,53 @@
+
+{% macro css_asset(asset_name) %}
+  {% assets asset_name %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
+  {% endassets %}
+{% endmacro %}
+
+{% macro js_asset(asset_name) %}
+  {% assets asset_name %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+{% endmacro %}
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    {% include "icons.html" %}
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    {{ css_asset("common_css") }}
+
+    {% block css %}
+    {% endblock %}
+  </head>
+  <body {% block body_attrs %}{% endblock %}>
+
+    {% block body %}
+    {% endblock %}
+
+    {{ js_asset("common_js") }}
+
+    {% if not debug %}
+      <script type="text/javascript">Raven.config('https://0823d11bb2e1460fbe935dd0fd79003f@sentry.cs61a.org/3').install() </script>
+    {% endif %}
+
+    {% block js %}
+    {% endblock %}
+
+    <script type="text/javascript">
+      var csrf_token = "{{ csrf_token() }}";
+    </script>
+  </body>
+</html>

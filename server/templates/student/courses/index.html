@@ -1,0 +1,51 @@
+{% extends "student/base.html" %}
+{% import 'student/courses/_coursetable.html' as table with context %}
+
+{% block title %} Courses | Ok {% endblock %}
+
+{% block body %}
+    <main>
+      {% include 'student/courses/sidebar.html' %}
+      <div class="col-md-2"></div>
+      <section class="content nomapa col-md-10 col-xs-12" role="main">
+
+        {% include 'student/header.html' %}
+
+        <div class="subcontent heading">
+          <div class="wrap">
+            <h1>Courses</h1>
+          </div>
+
+          {% include 'alerts.html' %}
+
+        </div>
+
+        <!-- start desktop/tablet version -->
+        {{ table.render_courses(instructor, tname="Staff Dashboard", admin=True) }}
+        {{ table.render_courses(current, tname="Enrolled Courses", empty=True) }}
+        {{ table.render_courses(past, tname="Inactive Courses") }}
+        <!-- Other courses below -->
+        <!-- end desktop/tablet version -->
+
+        <!-- start mobile version -->
+        {{ table.render_courses_mobile(instructor, tname="Staff Dashboard", admin=True) }}
+        {{ table.render_courses_mobile(current, tname="Current Courses", empty=True) }}
+        {{ table.render_courses_mobile(past, tname="Inactive Courses") }}
+        <!-- end mobile version -->
+
+        {% if current and all %}
+        <div class="subcontent list">
+          <button class="no-dash button-large" onclick="showElem('.other-courses')">
+            <i class="blank-icon-sm fa fa-ellipsis-h"></i>
+            &nbsp;View Other Courses
+          </button>
+        </div>
+        {% endif %}
+
+        {{ table.render_courses(all, tname="Other Courses (Not Enrolled)", class_="other-courses other-courses-desktop other-courses-hide") }}
+
+        {{ table.render_courses_mobile(all, tname="Other Courses", class_="other-courses other-courses-mobile other-courses-hide") }}
+
+      </section>
+    </main>
+{% endblock %}

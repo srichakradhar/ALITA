@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block css %}
+  {{ css_asset("staff_css") }}
+
+  {% block page_css %}
+  {% endblock %}
+
+{% endblock %}
+
+{% block js %}
+  {{ js_asset("staff_js") }}
+
+  {% block page_js %}
+  {% endblock %}
+
+{% endblock %}
+
+{% block body_attrs %}class="skin-black-light layout-top-nav layout-fixed"{% endblock %}
+
+{% block body %}
+<div class="wrapper">
+  <header class="main-header">
+    {% include 'staff/navbar.html' %}
+  </header>
+
+  <div class="content-wrapper disable-animations">
+      <div class="container">
+      {% block main %}
+      {% endblock %}
+    </div>
+  </div>
+  <footer class="main-footer">
+    <div class="container">
+      <b>Ok v3</b>
+      <div class="pull-right">
+          <strong> {{ current_user.email }} </strong>
+        </div>
+    </div>
+  </footer>
+</div>
+{% endblock %}

@@ -1,0 +1,118 @@
+{% macro render_no_courses_found(selector, descriptor="courses") %}
+    <div class='blank-state blank-state-lg'>
+        <div class='blank-state-icon-overlay'>
+          <img src="{{ url_for('static', filename='img/logo.svg') }}" class="blank-state-icon" alt="Ok Logo">
+        </div>
+        <div class='loading-block loading-block-error'>
+          <div class='status-bar'></div>
+        </div>
+
+      <h3 class='text-primary'> {{ descriptor }} </h3>
+      <small>It looks like {{ current_user.email }} is {{ descriptor.lower() }} in any course.<br>
+           Contact your course staff if you believe this is an error. <br>
+           Click <a onclick='document.getElementById("logout-form").submit();'>here</a> to login with another email.</small>
+      <br>
+      <br>
+      <button class='btn btn-default' onclick="showElem('{{ selector }}')">
+        <i class='blank-icon-sm fa fa-ellipsis-h'></i>
+        &nbsp;View Other Courses
+      </button>
+    </div>
+{% endmacro %}
+
+
+{% macro render_courses(courses, tname="Courses", admin=False, empty=False, class_="") %}
+  {% if courses %}
+  <div class="subcontent list hidden-xs hidden-sm {{ class_ }}">
+    <div class="wrap">
+      <h2>{{ tname }}</h2>
+      <table>
+        <tr class="header">
+          <th class="col-name">Name</th>
+          <th class="col-offering">Offering</th>
+          <th class="col-institution">Institution</th>
+          <th class="col-status">Status</th>
+        </tr>
+        {% for course in courses %}
+        <tr>
+          <td>
+            <div class="due">
+              <span>
+                {% if admin %}
+                <a class="admin-course" href="{{ url_for('admin.course', cid=course.id) }}" data-no-instant>{{course.display_name_with_semester}}</a>
+                {% else %}
+                <a class="student-course" href="{{ url_for('student.course', offering=course.offering) }}">{{course.display_name_with_semester}}</a>
+                {% endif %}
+              </span>
+            </div>
+          </td>
+          <td>
+            <span> {{course.offering}} </span>
+          </td>
+          <td>
+            <span>  {{course.institution | default("", True) }} </span>
+          </td>
+          <td>
+            {% if course.active %}
+            <div class="due-dot green"></div>
+              <div class="due">
+                <span class="due-text green"> Active</span>
+            {% else %}
+            <div class="due-dot red"></div>
+              <div class="due">
+                <span class="due-text red"> Inactive</span>
+            {% endif %}
+                <span class="due-date">Created: {{course.created.strftime('%m/%d/%y')}}</span>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+  {% elif empty %}
+  <div class="subcontent list hidden-xs hidden-sm">
+    <div class="wrap">
+    {{ render_no_courses_found(".other-courses-desktop", descriptor="Not enrolled as a student") }}
+    </div>
+  </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro render_courses_mobile(courses, tname="Courses", admin=False, empty=False, class_="") %}
+  {% if courses %}
+  <div class="subcontent list hidden-md hidden-lg {{ class_ }}">
+    <div class="wrap">
+      <h2>{{ tname }}</h2>
+      {% for course in courses %}
+
+      <div class="cell col-xs-12">
+        <div class="cell-title">
+          {% if admin %}
+            <a class="admin-course" href="{{ url_for('admin.course', cid=course.id) }}" data-no-instant>{{course.display_name_with_semester}}</a>
+          {% else %}
+            <a class="student-course" href="{{ url_for('student.course', offering=course.offering) }}">{{course.display_name_with_semester}}</a>
+          {% endif %}
+        </div>
+        <div class="cell-text"><span>{{course.offering}} @ {{course.institution}}</span></div>
+        <div class="cell-status">
+          {% if course.active %}
+            <span class="due-dot green"></span>
+            <span class="green">Enrolled</span>
+          {% else %}
+            <span class="due-dot red"></span>
+            <span class="red">Inactive</span>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% elif empty %}
+  <div class="subcontent list hidden-md hidden-lg">
+    <div class="wrap">
+    {{ render_no_courses_found(".other-courses-mobile", descriptor="Not enrolled as a student") }}
+    </div>
+  </div>
+  {% endif %}
+{% endmacro %}
